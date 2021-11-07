@@ -198,7 +198,8 @@ Fixing /practic/file.py
 
 #### 3. pycodestyle
 Используем команду:
-```pycodestyle --first file.py
+```
+pycodestyle --first file.py
 ```
 Вывод команды:
 ```file.py:9:53: E231 missing whitespace after ','
