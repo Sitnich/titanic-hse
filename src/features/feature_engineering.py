@@ -1,3 +1,5 @@
+import pandas as pd
+
 def new_features(train_df, test_df):
     train_df['family_size'] = train_df.SibSp + train_df.Parch + 1
     test_df['family_size'] = test_df.SibSp + test_df.Parch + 1
@@ -66,3 +68,22 @@ def new_features(train_df, test_df):
 
     train_df['age_group'] = train_df['Age'].map(age_group_fun)
     test_df['age_group'] = test_df['Age'].map(age_group_fun)
+
+    train_df = pd.get_dummies(train_df, columns=['Title', "Pclass", 'Embarked', 'family_group', 'fare_group'],
+                              drop_first=True)
+    test_df = pd.get_dummies(test_df, columns=['Title', "Pclass", 'Embarked', 'family_group', 'fare_group'],
+                             drop_first=True)
+    train_df.drop(['Cabin', 'family_size', 'Ticket', 'Name', 'Fare'], axis=1, inplace=True)
+    test_df.drop(['Ticket', 'Name', 'family_size', "Fare", 'Cabin'], axis=1, inplace=True)
+
+    train_df = pd.get_dummies(train_df, columns=['age_group'], drop_first=True)
+    test_df = pd.get_dummies(test_df, columns=['age_group'], drop_first=True)
+
+    train_df.drop(['Age', 'calculated_fare'], axis=1, inplace=True)
+    test_df.drop(['Age', 'calculated_fare'], axis=1, inplace=True)
+
+    train_df.drop(['Title_Rev', 'age_group_old', 'age_group_teenager', 'age_group_senior_citizen', 'Embarked_Q'],
+                  axis=1, inplace=True)
+    test_df.drop(['Title_Rev', 'age_group_old', 'age_group_teenager', 'age_group_senior_citizen', 'Embarked_Q'], axis=1,
+                 inplace=True)
+    return train_df, test_df
