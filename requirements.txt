@@ -2,5 +2,5 @@ numpy
 pandas
 pytest
 scikit_learn
-coverage
+pytest-cov
 flake8
