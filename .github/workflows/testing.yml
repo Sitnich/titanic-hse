@@ -12,7 +12,7 @@ jobs:
           python-version: '3.9'
     - name: Install requirements
       run: pip install -r requirements.txt
-    - name: dir
+    - name: Print folder contents
       run: ls
     - name: Run tests
       run: pytest
