@@ -6,7 +6,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@master
-    - name: Set up Python
     - uses: actions/setup-python@v1
       with:
           python-version: '3.9'
@@ -15,3 +14,4 @@ jobs:
     - name: Run tests
       run: pytest --cov
     - name: Tests report
+      run: coverage report
