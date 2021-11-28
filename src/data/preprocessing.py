@@ -10,39 +10,38 @@ pd.options.mode.chained_assignment = None
 label = LabelEncoder()
 
 
-def loading(name_train, name_test):
-    def read_info(
-            path_train: str,
-            path_test: str,
-            types_dict: dict = None
-    ):
-        if types_dict is None:
-            types_dict = {
-                'PassengerId': 'int64', 'Survived': 'int64', 'Pclass': 'int64',
-                'Name': 'object', 'Sex': 'object', 'Age': 'float64',
-                'SibSp': 'int64', 'Parch': 'int64', 'Ticket': 'object',
-                'Fare': 'float64', 'Cabin': 'object', 'Embarked': 'object'}
-        ROOT_DIR_RAW = ROOT_DIR + r"\..\data\raw"
-        train_df = pd.read_csv(os.path.join(ROOT_DIR_RAW, path_train), dtype=types_dict)
-        test_df = pd.read_csv(os.path.join(ROOT_DIR_RAW, path_test))
+def loading(
+        path_train: str,
+        path_test: str = None,
+        types_dict: dict = None
+):
+    if types_dict is None:
+        types_dict = {
+            'PassengerId': 'int64', 'Survived': 'int64', 'Pclass': 'int64',
+            'Name': 'object', 'Sex': 'object', 'Age': 'float64',
+            'SibSp': 'int64', 'Parch': 'int64', 'Ticket': 'object',
+            'Fare': 'float64', 'Cabin': 'object', 'Embarked': 'object'}
+    if path_test is None:
+        path_test = path_train
+    ROOT_DIR_RAW = ROOT_DIR + r"\..\data\raw"
+    train_df = pd.read_csv(os.path.join(ROOT_DIR_RAW, path_train), dtype=types_dict)
+    test_df = pd.read_csv(os.path.join(ROOT_DIR_RAW, path_test))
 
-        train_df.name = 'Training Set'
-        test_df.name = 'Test Set'
-        return (train_df, test_df)
+    train_df.name = 'Training Set'
+    test_df.name = 'Test Set'
+    return (train_df, test_df)
 
 
-    train_df, test_df = read_info(name_train, name_test)
-    return train_df, test_df
-
-def print_info(train_df, test_df):
-    print('Number of Training Examples = {}'.format(train_df.shape[0]))
-    print('Number of Test Examples = {}\n'.format(test_df.shape[0]))
-    print('Training X Shape = {}'.format(train_df.shape))
-    print('Training y Shape = {}\n'.format(train_df['Survived'].shape[0]))
-    print('Test X Shape = {}'.format(test_df.shape))
-    print('Test y Shape = {}\n'.format(test_df.shape[0]))
-    print(train_df.columns)
-    print(test_df.columns)
+def print_info(train_df):
+    not_null_flag=bool(train_df.shape[0])
+    if not_null_flag:
+        print('Number of Examples = {}'.format(train_df.shape[0]))
+        print('X Shape = {}'.format(train_df.shape))
+        print('y Shape = {}\n'.format(train_df.shape[0]))
+        print(train_df.columns)
+        return 'printed'
+    else:
+        raise TypeError('nothing to print')
 
 def preparing(train_df, test_df):
     ## всего одно пропущенное значение - заполним средним
@@ -57,8 +56,8 @@ def preparing(train_df, test_df):
 
     train_df = train_df[train_df['Fare'] < 400]
 
-    train_df['Sex'] = train_df.Sex.apply(lambda x: 0 if x == "female" else 1)
-    test_df['Sex'] = test_df.Sex.apply(lambda x: 0 if x == "female" else 1)
+    bool_Sex(train_df)
+    bool_Sex(test_df)
 
     test_df['Fare'].fillna(test_df['Fare'].mean(), inplace=True)
 
@@ -90,3 +89,7 @@ def preparing(train_df, test_df):
     test_df.to_csv(ROOT_DIR + r"\..\data\processed/test.csv")
 
     return train_df, test_df, passenger_id
+
+def bool_Sex(df):
+    df['Sex'] = df.Sex.apply(lambda x: 0 if x == "female" else 1)
+    return df.Sex.dtypes
