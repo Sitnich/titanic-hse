@@ -7,7 +7,7 @@ jobs:
     runs-on: windows-latest
     steps:
     - uses: actions/checkout@master
-    - uses: actions/setup-python@v1
+    - uses: actions/setup-python@v2
       with:
           python-version: '3.9'
     - name: Install requirements
@@ -15,6 +15,6 @@ jobs:
     - name: Print folder contents
       run: ls
     - name: Run tests
-      run: pytest
-    - name: Tests report
-      run: coverage report
+      run: pytest --cov
+    - name: Linter check
+      run: flake8
