@@ -1,4 +1,5 @@
 
+
 name: testing
 on: [push]
 jobs:
@@ -6,12 +7,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@master
-    - name: Set up Python
     - uses: actions/setup-python@v1
       with:
           python-version: '3.9'
     - name: Install requirements
       run: pip install -r requirements.txt
+    - name: dir
+      run: ls
     - name: Run tests
-      run: pytest --cov
+      run: pytest
     - name: Tests report
+      run: coverage report
