@@ -1,2 +1,2 @@
 # titanic-hse
- placeholder
+![Alt text](titanic_pic.png?raw=true "Title")
