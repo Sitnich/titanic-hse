@@ -1,9 +1,9 @@
 import os
+import numpy as np
 import pandas as pd
 from sklearn.preprocessing import LabelEncoder
 
 ROOT_DIR = os.path.abspath(os.curdir)
-
 
 pd.options.mode.chained_assignment = None
 
@@ -33,16 +33,22 @@ def loading(
     return (train_df, test_df)
 
 
-def print_info(train_df):
+def print_info(train_df, file_output=False):
     not_null_flag = bool(train_df.shape[0])
-    if not_null_flag:
+    if not_null_flag and not file_output:
         print('Number of Examples = {}'.format(train_df.shape[0]))
         print('X Shape = {}'.format(train_df.shape))
         print('y Shape = {}\n'.format(train_df.shape[0]))
         print(train_df.columns)
         return 'printed'
-    else:
+    elif not not_null_flag:
         raise TypeError('nothing to print')
+    elif file_output:
+        str = 'Number of Examples = {}\n'.format(train_df.shape[0]) \
+              + 'X Shape = {}\n'.format(train_df.shape) + \
+              'y Shape = {}\n'.format(train_df.shape[0]) +\
+              train_df.columns
+        return str
 
 
 def preparing(train_df, test_df):
@@ -93,9 +99,10 @@ def preparing(train_df, test_df):
     return train_df, test_df, passenger_id
 
 
-def write_processed(train_df, test_df):
+def write_processed(train_df, test_df, passenger_id):
     train_df.to_csv(ROOT_DIR + r"\..\data\processed/train.csv")
     test_df.to_csv(ROOT_DIR + r"\..\data\processed/test.csv")
+    np.savetxt(ROOT_DIR+ r"\..\data\processed/passenger_id.csv", passenger_id, delimiter=",")
 
 
 def bool_sex(df):

@@ -6,9 +6,10 @@ import src.models.logisticRegression as lR
 def pip():
     train, test = pp.loading('train.csv', 'test.csv')
     train, test, passenger_id = pp.preparing(train, test)
-    pp.write_processed(train, test)
+    pp.write_processed(train, test, passenger_id)
 
     train, test = fe.new_features(train, test)
+    pp.write_processed(train, test, passenger_id)
 
     pp.print_info(train)
 
