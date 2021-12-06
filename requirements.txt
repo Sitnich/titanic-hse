@@ -1,6 +1,0 @@
-numpy
-pandas
-pytest
-scikit_learn
-pytest-cov
-flake8
