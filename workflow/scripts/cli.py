@@ -38,7 +38,7 @@ def create_features(paths):
 def print_info(input, output):
     df = pd.read_csv(data_dir+input)
     pr = pp.print_info(df, file_output=True)
-    np.savetxt(project_dir + '\\reports\\' + output, pr, delimiter = " ")
+    np.savetxt(project_dir + '\\reports\\' + output +'_printed.csv', pr, delimiter = " ")
 
 @cli.command()
 @click.argument("path", type=click.Path(), nargs=1)
