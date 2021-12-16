@@ -1,59 +1,68 @@
-import pandas as pd
 import os
-from sklearn.model_selection import train_test_split
-from sklearn.model_selection import StratifiedKFold
+
+import pandas as pd
 from sklearn.linear_model import LogisticRegression
-from sklearn.metrics import precision_score,recall_score,confusion_matrix
 from sklearn.metrics import accuracy_score
+from sklearn.metrics import precision_score, recall_score, confusion_matrix
 from sklearn.model_selection import GridSearchCV
+from sklearn.model_selection import StratifiedKFold
+from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 
 logreg = LogisticRegression(solver='liblinear', penalty='l1')
 
 ROOT_DIR = os.path.abspath(os.curdir)
 
-def build_logReg(train_df, test_df):
-    X = train_df.drop(columns='Survived')
+
+def build_log_reg(train_df, test_df):
+    x = train_df.drop(columns='Survived')
     y = train_df['Survived']
 
     std_scaler = StandardScaler()
-    X = std_scaler.fit_transform(X)
+    x = std_scaler.fit_transform(x)
     testframe = std_scaler.fit_transform(test_df)
 
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.20, random_state=1000)
+    x_train, x_test, y_train, y_test = train_test_split(
+        x, y, test_size=0.20, random_state=1000)
 
-    def logReg(X_train,y_train, X_test, y_test):
-        logreg.fit(X_train,y_train)
-        predict=logreg.predict(X_test)
-        print(accuracy_score(y_test,predict))
-        print(confusion_matrix(y_test,predict))
-        print(precision_score(y_test,predict))
-        print(recall_score(y_test,predict))
+    def log_reg(x_train, y_train, x_test, y_test):
+        logreg.fit(x_train, y_train)
+        predict = logreg.predict(x_test)
+        print(accuracy_score(y_test, predict))
+        print(confusion_matrix(y_test, predict))
+        print(precision_score(y_test, predict))
+        print(recall_score(y_test, predict))
 
         def grid_search():
-            C_vals = [0.0001, 0.001, 0.01, 0.1, 0.13, 0.2, .15, .25, .275, .33, 0.5, .66, 0.75, 1.0, 2.5, 4.0, 4.5, 5.0, 5.1,
-                      5.5, 6.0, 10.0, 100.0, 1000.0]
+            c_vals = [0.0001, 0.001, 0.01, 0.1, 0.13, 0.2, .15,
+                      .25, .275, .33, 0.5, .66, 0.75, 1.0, 2.5, 4.0, 4.5, 5.0,
+                      5.1, 5.5, 6.0, 10.0, 100.0, 1000.0]
             penalties = ['l1', 'l2']
 
-            param = {'penalty': penalties, 'C': C_vals, }
-            grid = GridSearchCV(logreg, param, verbose=False, cv=StratifiedKFold(n_splits=5, random_state=10, shuffle=True),
-                                n_jobs=1, scoring='accuracy')
-            grid.fit(X_train, y_train)
+            param = {'penalty': penalties, 'C': c_vals, }
+            grid = GridSearchCV(
+                logreg, param, verbose=False,
+                cv=StratifiedKFold(n_splits=5,
+                                   random_state=10, shuffle=True),
+                n_jobs=1, scoring='accuracy')
+            grid.fit(x_train, y_train)
             print(grid.best_params_)
             print(grid.best_score_)
             print(grid.best_estimator_)
 
-            logreg_grid = LogisticRegression(penalty=grid.best_params_['penalty'], C=grid.best_params_['C'])
-            logreg_grid.fit(X_train, y_train)
-            y_pred = logreg_grid.predict(X_test)
+            logreg_grid = LogisticRegression(
+                penalty=grid.best_params_['penalty'], C=grid.best_params_['C'])
+            logreg_grid.fit(x_train, y_train)
+            y_pred = logreg_grid.predict(x_test)
             logreg_accy = round(accuracy_score(y_test, y_pred), 3)
             print(logreg_accy)
             print(confusion_matrix(y_test, y_pred))
             print(precision_score(y_test, y_pred))
             print(recall_score(y_test, y_pred))
 
-    logReg(X_train, y_train, X_test, y_test)
-    return(testframe)
+    log_reg(x_train, y_train, x_test, y_test)
+    return (testframe)
+
 
 def submit(testframe, passenger_id):
     y_predict = logreg.predict(testframe)
