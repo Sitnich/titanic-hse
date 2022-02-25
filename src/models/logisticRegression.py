@@ -76,6 +76,6 @@ def submit(testframe, passenger_id, output=False):
     }))
     if not output:
         print(y_predict)
-        temp.to_csv(ROOT_DIR + r"\..\data\result\res.csv", index=False)
+        temp.to_csv(ROOT_DIR + r"/../data/result/res.csv", index=False)
     else:
         return temp

@@ -23,7 +23,7 @@ def loading(
             'Fare': 'float64', 'Cabin': 'object', 'Embarked': 'object'}
     if path_test is None:
         path_test = path_train
-    root_dir_raw = ROOT_DIR + r"\..\data\raw"
+    root_dir_raw = ROOT_DIR + r"/../data/raw"
     train_df = pd.read_csv(os.path.join(root_dir_raw, path_train),
                            dtype=types_dict)
     test_df = pd.read_csv(os.path.join(root_dir_raw, path_test))
@@ -100,9 +100,9 @@ def preparing(train_df, test_df):
 
 
 def write_processed(train_df, test_df, passenger_id):
-    train_df.to_csv(ROOT_DIR + r"\..\data\processed/train.csv")
-    test_df.to_csv(ROOT_DIR + r"\..\data\processed/test.csv")
-    np.savetxt(ROOT_DIR+ r"\..\data\processed/passenger_id.csv", passenger_id, delimiter=",")
+    train_df.to_csv(ROOT_DIR + r"/../data/processed/train.csv")
+    test_df.to_csv(ROOT_DIR + r"/../data/processed/test.csv")
+    np.savetxt(ROOT_DIR+ r"/../data/processed/passenger_id.csv", passenger_id, delimiter=",")
 
 
 def bool_sex(df):

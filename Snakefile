@@ -1,5 +1,5 @@
 import os
-project_dir=os.path.abspath(os.curdir) + '\..\..'
+project_dir=os.path.abspath(os.curdir)
 os.chdir(project_dir)
 
 from pathlib import Path
@@ -7,45 +7,46 @@ from pathlib import Path
 rule all:
     input:
         Path("reports/res_result.csv"),
-        Path("reports/test_prepared.csv"),
-        Path("reports/train_prepared.csv"),
-        Path("reports/test_processed.csv"),
-        Path("reports/train_processed.csv")
-
 rule prepare_data:
     output:
-        Path("test"),
-        Path("train"),
-        Path("passenger_id")
+        Path("reports/train_prepared.csv"),
+        Path("reports/test_prepared.csv"),
+        Path("reports/passenger_id.csv")
     params:
-        cli=Path("workflow/scripts/cli.py"),
+        cli=Path("workflow/scripts/cli.py")
     shell:
-        "python {params.cli} prepare-data {output}"
+        "python3 {params.cli} prepare-data {output}"
 
 rule create_features:
+    input:
+        Path("reports/train_prepared.csv"),
+        Path("reports/test_prepared.csv")
     output:
-        Path("test"),
-        Path("train")
+        Path("reports/train_processed.csv"),
+        Path("reports/test_processed.csv")
     params:
         cli=Path("workflow/scripts/cli.py"),
     shell:
-        "python {params.cli} create-features {output}"
+        "python3 {params.cli} create-features {output}"
 
-rule print_info:
+rule print_info_train:
     input:
         Path("data/train.csv")
     output:
-        Path("test"),
-        Path("train")
+        Path("reports/train_info.csv")
     params:
         cli=Path("workflow/scripts/cli.py"),
     shell:
-        "python {params.cli} print-info {input} {output}"
+        "python3 {params.cli} print-info {input} {output}"
 
 rule logReg_result:
+    input:
+        Path("reports/train_processed.csv"),
+        Path("reports/test_processed.csv"),
+        Path("reports/passenger_id.csv")
     output:
-        Path("result"),
+        Path("reports/res_result.csv")
     params:
         cli=Path("workflow/scripts/cli.py"),
     shell:
-        "python {params.cli} logreg-result {output}"
+        "python3 {params.cli} logreg-result {output}"
